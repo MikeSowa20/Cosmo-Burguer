@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 
 export interface ProdutosType{
     nome:string,
@@ -28,4 +28,9 @@ export interface MensageProps{
 
 export interface pageProps{
     setMsg: ({}:MensageProps)=>void
+}
+
+export interface cabecalhoProps{
+    label:string,
+    icon: ElementType
 }
