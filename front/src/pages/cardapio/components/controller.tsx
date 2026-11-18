@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDelete } from "react-icons/md";
-import type { pageProps, ProdutosType } from "../../../types/types";
+import type { cabecalhoProps, pageProps, ProdutosType } from "../../../types/types";
 import {
     atualizarProduto,
     criarProduto,
@@ -10,6 +10,9 @@ import {
     obterProximoId,
     type DadosProduto,
 } from "../services";
+import { CABECALHO } from "../config/cabeçalho";
+import { PRODUTOSTESTE } from "../config/produto-test";
+
 
 const dadosIniciais: DadosProduto = {
     nome: "",
@@ -26,9 +29,20 @@ export default function useCardapioController({ setMsg }: pageProps) {
     const [openConfirmDeleteID, setOpenConfirmDeleteID] = useState<number | null>(null);
     const [openEditModal, setOpenEditModal] = useState<number | null>(null);
     const [dadosProduto, setDadosProduto] = useState<DadosProduto>(dadosIniciais);
-    const [produtos, setProdutos] = useState<ProdutosType[]>([]);
+    const [produtos, setProdutos] = useState<ProdutosType[]>(() =>
+        PRODUTOSTESTE.map((produto, index) => {
+            const id = index + 1;
+            return {
+                ...produto,
+                id,
+                data: Date.now() - index,
+                acoes: criarAcoes(id),
+            };
+        }),
+    );
     const [query, setQuery] = useState("");
     const produtosRef = useRef(produtos);
+    const [cabecalho,setCabecalho] = useState<cabecalhoProps[]>(CABECALHO)
 
     useEffect(() => {
         produtosRef.current = produtos;
@@ -43,6 +57,22 @@ export default function useCardapioController({ setMsg }: pageProps) {
         valor: DadosProduto[K],
     ) {
         setDadosProduto((atual) => ({ ...atual, [campo]: valor }));
+    }
+
+    // Alterar os itens do cabeçalho via checkbox
+    function AlteraItemCabecalho(id:cabecalhoProps["id"]){
+        setCabecalho(
+            cabecalho.map((option)=>
+                option.id === id ?
+                    {
+                        id:option.id,
+                        label:option.label,
+                        icon:option.icon,
+                        value:!option.value,
+                    }:
+                    option
+            )
+        )
     }
 
     // Ações exibidas em cada linha da tabela
@@ -160,5 +190,7 @@ export default function useCardapioController({ setMsg }: pageProps) {
         confirmarEdicao,
         confirmarExclusao,
         fecharConfirmacaoExclusao,
+        AlteraItemCabecalho,
+        cabecalho,
     };
 }

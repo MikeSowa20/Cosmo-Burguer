@@ -30,7 +30,11 @@ export interface pageProps{
     setMsg: ({}:MensageProps)=>void
 }
 
+export type CabecalhoId = "nome" | "descricao" | "categoria" | "preco" | "estoque" | "acoes";
+
 export interface cabecalhoProps{
+    id: CabecalhoId,
     label:string,
     icon: ElementType
+    value: boolean
 }

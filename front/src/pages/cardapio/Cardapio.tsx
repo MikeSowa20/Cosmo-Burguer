@@ -9,7 +9,7 @@ import Search from "../../components/ui/Search";
 import Tabela from "../../components/ui/Tabela";
 import ModalGenerico from "../../components/ui/ModalGenerico";
 import useCardapioController from "./components/controller";
-import { cabecalho } from "./config/cabeçalho";
+import ListCheckBox from "../../components/ui/ListCheckBox";
 
 export default function Cardapio({ setMsg }: pageProps) {
     const cardapio = useCardapioController({ setMsg });
@@ -28,12 +28,18 @@ export default function Cardapio({ setMsg }: pageProps) {
                 className="bg-red-800 cursor-pointer z-10 absolute right-20 top-12"
             />
 
-            <BodyContainer classname="py-5 px-4">
+            <BodyContainer classname="py-5 px-4 flex items-center gap-6">
                 <div className="flex gap-6">
                     <Search
                         query={cardapio.query}
                         setQuery={cardapio.setQuery}
                         placeholder="Pesquise o seu produto aqui..."
+                    />
+                </div>
+                <div className="">
+                    <ListCheckBox
+                        options={cardapio.cabecalho}
+                        handleChange={cardapio.AlteraItemCabecalho}
                     />
                 </div>
             </BodyContainer>
@@ -43,7 +49,7 @@ export default function Cardapio({ setMsg }: pageProps) {
                 totalProdutos={cardapio.produtos.length}
                 openModal={cardapio.openModal}
                 abrirModal={cardapio.iniciarCadastro}
-                cabecalho={cabecalho}
+                cabecalho={cardapio.cabecalho}
             />
             {cardapio.openModal && (
                 <FormCardapio

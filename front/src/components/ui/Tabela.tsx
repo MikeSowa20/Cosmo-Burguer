@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaGreaterThan } from "react-icons/fa";
+import type { ReactNode } from "react";
 import type { cabecalhoProps, ProdutosType } from "../../types/types";
 import BodyContainer from "../layout/BodyContainer";
 import Button from "./Button";
@@ -19,8 +20,9 @@ export default function Tabela({
     cabecalho,
     abrirModal,
 }: TabelaProps) {
+    const colunasVisiveis = cabecalho.filter((coluna) => coluna.value);
     const [page, setPage] = useState(1)
-    const produtosPorPagina = 9
+    const produtosPorPagina = 8
     const qtdPage = Math.max(1, Math.ceil(produtos.length / produtosPorPagina))
     const paginaAtual = Math.min(page, qtdPage)
     const produtosDaPagina = produtos.slice(
@@ -37,23 +39,49 @@ export default function Tabela({
         setPage(Math.max(1, Math.min(numeroPagina, qtdPage)))
     }
 
+    function renderizarCelula(id: cabecalhoProps["id"], produto: ProdutosType): ReactNode {
+        switch (id) {
+            case "nome":
+                return produto.nome;
+            case "descricao":
+                return produto.descricao;
+            case "categoria":
+                return produto.categoria;
+            case "preco":
+                return produto.preco;
+            case "estoque":
+                return produto.estoque;
+            case "acoes":
+                return (
+                    <div className="flex justify-center gap-3 px-8">
+                        <span onClick={produto.acoes.delete.function} className="flex justify-center">
+                            {produto.acoes.delete.view}
+                        </span>
+                        <span onClick={produto.acoes.edit.function} className="flex justify-center">
+                            {produto.acoes.edit.view}
+                        </span>
+                    </div>
+                );
+        }
+    }
+
     return (
         <BodyContainer classname="mx-10">
             <div className="flex h-[60vh] w-full flex-col">
                 <div className={`min-h-0 flex-1 overflow-x-auto ${produtosDaPagina.length === 0 ? "overflow-y-hidden" : "overflow-y-auto"}`}>
                     <div className="flex h-full min-w-[720px] flex-col">
-                        <table className="w-full table-fixed border-separate border-spacing-0">
+                        <table className="w-full table-fixed border-separate border-spacing-0 h-max">
                             <thead>
                                 <tr className="h-12 text-center font-bold text-white">
-                                    {cabecalho.map((item, index) => {
+                                    {colunasVisiveis.map((item, index) => {
                                         const Icon = item.icon
 
                                         return (
                                             <th
                                                 scope="col"
                                                 className={`h-12 border-l-2 border-red-700 bg-red-800 px-2 py-0 ${index === 0 ? "rounded-tl-lg" : ""
-                                                    } ${index === cabecalho.length - 1 ? "rounded-tr-lg" : ""}`}
-                                                key={item.label}
+                                                    } ${index === colunasVisiveis.length - 1 ? "rounded-tr-lg" : ""}`}
+                                                key={item.id}
                                             >
                                                 <div className="flex gap-2 justify-center">
                                                     <Icon className="text-2xl" />
@@ -71,19 +99,14 @@ export default function Tabela({
                                             key={`${produto.nome}-${produto.data}-${index}`}
                                             className={`h-12 text-center text-slate-700 text-sm ${index % 2 === 0 ? "" : "bg-slate-100"}`}
                                         >
-                                            <td className="h-12 truncate border border-slate-200 p-2">{produto.nome}</td>
-                                            <td className="h-12 truncate border border-slate-200 p-2">{produto.descricao}</td>
-                                            <td className="h-12 truncate border border-slate-200 p-2">{produto.categoria}</td>
-                                            <td className="h-12 truncate border border-slate-200 p-2">{produto.preco}</td>
-                                            <td className="h-12 truncate border border-slate-200 p-2">{produto.estoque}</td>
-                                            <td className="h-12 truncate border border-slate-200 p-2 flex justify-center px-8 gap-3">
-                                                <span onClick={produto.acoes.delete.function} className="flex justify-center">
-                                                    {produto.acoes.delete.view}
-                                                </span>
-                                                <span onClick={produto.acoes.edit.function} className="flex justify-center">
-                                                    {produto.acoes.edit.view}
-                                                </span>
-                                            </td>
+                                            {colunasVisiveis.map((coluna) => (
+                                                <td
+                                                    key={coluna.id}
+                                                    className="h-12 truncate border border-slate-200 p-2"
+                                                >
+                                                    {renderizarCelula(coluna.id, produto)}
+                                                </td>
+                                            ))}
                                         </tr>
                                     ))}
                                 </tbody>
@@ -118,7 +141,7 @@ export default function Tabela({
                 <div className="mt-auto min-h-16 shrink-0 border-t border-slate-300 py-5 px-8 flex items-center justify-between">
                     <div>
                         <p className="text-slate-400">
-                            Exibindo <span className="text-slate-800">{produtos.length}</span> de{" "}
+                            Exibindo <span className="text-slate-800">{produtosDaPagina.length}</span> de{" "}
                             <span className="text-slate-800">{totalProdutos}</span> registros
                         </p>
                     </div>
