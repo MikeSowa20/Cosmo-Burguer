@@ -7,9 +7,9 @@
 Desenvolver uma solução de software para otimizar o gerenciamento interno de lanchonetes e restaurantes, permitindo organizar pedidos, controlar produtos e ingredientes em estoque, acompanhar as etapas de preparo e identificar possíveis gargalos operacionais.
 
 ## Integrantes
-- Mike André Sowa — GitHub: @usuario1
-- Felipe de Lima Cosmoski — GitHub: @usuario2
-- João Paulo Dalzoto — GitHub: @usuario3
+- Mike André Sowa — GitHub: @mikesowa20
+- Felipe de Lima Cosmoski — GitHub: @fcosmoski
+- João Paulo Dalzoto — GitHub: @jpdalzoto
 - Raul Mateus de Lima Reis — GitHub: @raulmateuslr
 
 ## Funcionalidades principais
